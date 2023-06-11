@@ -1,0 +1,156 @@
+import java.time.LocalDate
+
+data class BandEvent(
+    val name: String,
+    val date: LocalDate,
+    val location: String,
+    val description: String,
+    val performers: List<String>,
+    val ticketPrice: Double,
+    val ticketAvailability: Int
+)
+
+class EventPage(private val events: MutableList<BandEvent>) {
+
+    fun addEvent(event: BandEvent) {
+        events.add(event)
+        println("Event '${event.name}' added successfully!")
+    }
+
+    fun removeEvent(eventName: String) {
+        val eventToRemove = events.find { it.name == eventName }
+        if (eventToRemove != null) {
+            events.remove(eventToRemove)
+            println("Event '$eventName' removed successfully!")
+        } else {
+            println("Event '$eventName' not found!")
+        }
+    }
+
+    fun displayEvents() {
+        if (events.isEmpty()) {
+            println("No events found.")
+            return
+        }
+
+        println("Upcoming Band Events:")
+        for (event in events) {
+            println("Event: ${event.name}")
+            println("Date: ${event.date}")
+            println("Location: ${event.location}")
+            println("Description: ${event.description}")
+            println("Performers: ${event.performers.joinToString(", ")}")
+            println("Ticket Price: $${event.ticketPrice}")
+            println("Ticket Availability: ${event.ticketAvailability}")
+            println()
+        }
+    }
+
+    fun displayEventsByDate() {
+        if (events.isEmpty()) {
+            println("No events found.")
+            return
+        }
+
+        val sortedEvents = events.sortedBy { it.date }
+
+        println("Upcoming Band Events (Sorted by Date):")
+        for (event in sortedEvents) {
+            println("Event: ${event.name}")
+            println("Date: ${event.date}")
+            println("Location: ${event.location}")
+            println("Description: ${event.description}")
+            println("Performers: ${event.performers.joinToString(", ")}")
+            println("Ticket Price: $${event.ticketPrice}")
+            println("Ticket Availability: ${event.ticketAvailability}")
+            println()
+        }
+    }
+
+    fun searchEventsByPerformer(performer: String) {
+        val matchingEvents = events.filter { performer in it.performers }
+        if (matchingEvents.isEmpty()) {
+            println("No events found for performer '$performer'.")
+            return
+        }
+
+        println("Events featuring '$performer':")
+        for (event in matchingEvents) {
+            println("Event: ${event.name}")
+            println("Date: ${event.date}")
+            println("Location: ${event.location}")
+            println("Description: ${event.description}")
+            println("Ticket Price: $${event.ticketPrice}")
+            println("Ticket Availability: ${event.ticketAvailability}")
+            println()
+        }
+    }
+
+    fun updateTicketAvailability(eventName: String, newAvailability: Int) {
+        val eventToUpdate = events.find { it.name == eventName }
+        if (eventToUpdate != null) {
+            eventToUpdate.ticketAvailability = newAvailability
+            println("Ticket availability for event '$eventName' updated successfully!")
+        } else {
+            println("Event '$eventName' not found!")
+        }
+    }
+}
+
+fun main() {
+    val eventList = mutableListOf(
+        BandEvent(
+            "Concert 1",
+            LocalDate.of(2023, 6, 15),
+            "Venue A",
+            "An amazing concert featuring popular bands.",
+            listOf("Band A", "Band B", "Band C"),
+            25.0,
+            1000
+        ),
+        BandEvent(
+            "Concert 2",
+            LocalDate.of(2023, 6, 18),
+            "Venue B",
+            "A night of rock and roll.",
+            listOf("Band D", "Band E", "Band F"),
+            30.0,
+            800
+        ),
+        BandEvent(
+            "Concert 3",
+            LocalDate.of(2023, 6, 22),
+            "Venue C",
+            "A mesmerizing performance by a solo artist.",
+            listOf("Solo Artist A"),
+            40.0,
+            500
+        )
+    )
+
+    val eventPage = EventPage(eventList)
+
+    eventPage.addEvent(
+        BandEvent(
+            "Concert 4",
+            LocalDate.of(2023, 6, 25),
+            "Venue D",
+            "A grand music festival with multiple stages.",
+            listOf("Band G", "Band H", "Band I", "Band J"),
+            50.0,
+            2000
+        )
+    )
+
+    eventPage.displayEvents()
+
+    eventPage.removeEvent("Concert 2")
+
+    eventPage.displayEventsByDate()
+
+    eventPage.searchEventsByPerformer("Band B")
+
+    eventPage.updateTicketAvailability("Concert 1", 800)
+
+    eventPage.displayEvents()
+}
